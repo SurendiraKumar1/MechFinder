@@ -1,0 +1,39 @@
+<!-- home.html -->
+{% extends "base.html" %}
+{% block content %}
+<div class="hero-section text-center">
+    <h1>Welcome to MechFinder</h1>
+    <p class="lead">Find reliable mechanic shops near you</p>
+    <div class="hero-buttons">
+        <a href="{{ url_for('map_view') }}" class="btn btn-primary btn-lg">Find Mechanics</a>
+        <a href="{{ url_for('register') }}" class="btn btn-outline-primary btn-lg">Register Your Shop</a>
+    </div>
+</div>
+
+<div class="features-section">
+    <h2 class="text-center mb-4">How It Works</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="feature-card">
+                <i class="fas fa-search"></i>
+                <h3>Find Nearby Shops</h3>
+                <p>Locate mechanic shops in your area using our interactive map</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <i class="fas fa-tools"></i>
+                <h3>View Services</h3>
+                <p>Check available services and working hours</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="feature-card">
+                <i class="fas fa-phone"></i>
+                <h3>Connect</h3>
+                <p>Contact shops directly through provided information</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

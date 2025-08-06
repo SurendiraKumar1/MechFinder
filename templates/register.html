@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="register-form-container">
+    <h2>Register Your Mechanic Shop</h2>
+    <form method="POST" class="registration-form">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="shop_name" class="form-label">Shop Name</label>
+                <input type="text" class="form-control" id="shop_name" name="shop_name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="owner_name" class="form-label">Owner Name</label>
+                <input type="text" class="form-control" id="owner_name" name="owner_name" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">Phone</label>
+                <input type="tel" class="form-control" id="phone" name="phone" required>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="address" class="form-label">Address</label>
+            <input type="text" class="form-control" id="address" name="address" required>
+        </div>
+
+        <!-- Map Selection -->
+        <div class="mb-3">
+            <label class="form-label">Select Your Shop Location</label>
+            <div id="map" style="height: 300px; border-radius: 8px;"></div>
+        </div>
+
+        <!-- Hidden fields to store latitude and longitude -->
+        <input type="hidden" id="latitude" name="latitude">
+        <input type="hidden" id="longitude" name="longitude">
+
+        <div class="mb-3">
+            <label for="services" class="form-label">Services (comma-separated)</label>
+            <textarea class="form-control" id="services" name="services" rows="1" required></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="working_hours" class="form-label">Working Hours</label>
+            <input type="text" class="form-control" id="working_hours" name="working_hours" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Register Shop</button>
+    </form>
+</div>
+
+<!-- Leaflet Map Integration -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    var map = L.map('map').setView([10.8505, 78.7038], 7); // Center on Tamil Nadu
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    var marker;
+
+    // Add marker on map click and update hidden input fields
+    map.on('click', function(e) {
+        var lat = e.latlng.lat;
+        var lng = e.latlng.lng;
+
+        if (marker) {
+            map.removeLayer(marker);
+        }
+
+        marker = L.marker([lat, lng]).addTo(map)
+            .bindPopup("Selected Location<br>Latitude: " + lat.toFixed(6) + "<br>Longitude: " + lng.toFixed(6))
+            .openPopup();
+
+        document.getElementById('latitude').value = lat;
+        document.getElementById('longitude').value = lng;
+    });
+</script>
+{% endblock %}

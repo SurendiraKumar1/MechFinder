@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="map-container">
+    <div id="map" class="google-map"></div>
+    <div id="shop-info" class="shop-info-panel"></div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    // Initialize map centered on Tamil Nadu, India
+    var map = L.map('map').setView([10.8505, 78.7038], 7);
+
+    // Load OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    // Function to fetch shop data and plot markers
+    async function loadShops() {
+        try {
+            const response = await fetch('/api/shops'); // Fetch data from API
+            const shops = await response.json();
+
+            console.log("Fetched shop data:", shops); // Debugging step
+
+            if (shops.length === 0) {
+                console.warn("No shop data available.");
+                return;
+            }
+
+            // Loop through shop data and add markers
+            shops.forEach(shop => {
+                if (shop.latitude && shop.longitude) {
+                    L.marker([shop.latitude, shop.longitude]).addTo(map)
+                        .bindPopup(`
+                            <b>${shop.shop_name}</b><br>
+                            ${shop.address}<br>
+                            ☎ ${shop.phone}<br>
+                            <b>Services:</b> ${shop.services}<br>
+                            <b>Working Hours:</b> ${shop.working_hours}
+                        `);
+                } else {
+                    console.warn("Invalid shop data:", shop);
+                }
+            });
+
+        } catch (error) {
+            console.error("Error fetching shop data:", error);
+        }
+    }
+
+    // Call function to load shops on map
+    loadShops();
+</script>
+{% endblock %}
